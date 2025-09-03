@@ -7,6 +7,6 @@ namespace RegistroDeJugadores.DAL;
     {
         public Contexto(DbContextOptions<Contexto> options) : base(options) {}
 
-        public DbSet<Jugadores> Jugador { get; set; }
+        public DbSet<Jugadores> Jugadores { get; set; }
     }
 
