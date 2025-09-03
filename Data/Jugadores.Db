@@ -1,0 +1,6 @@
+﻿namespace RegistroDeJugadores.Data
+{
+    public class Jugadores
+    {
+    }
+}
