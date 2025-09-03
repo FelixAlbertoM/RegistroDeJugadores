@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using RegistroDeJugadores.Components;
 using RegistroDeJugadores.DAL;
+using RegistroDeJugadores.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,8 @@ builder.Services.AddRazorComponents()
 var ConStr = builder.Configuration.GetConnectionString("SqlConStr");
 
 builder.Services.AddDbContextFactory<Contexto>(o => o.UseSqlServer(ConStr));
+
+builder.Services.AddScoped<JugadoresService>();
 
 var app = builder.Build();
 
