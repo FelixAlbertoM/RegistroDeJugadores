@@ -23,7 +23,7 @@ namespace RegistroDeJugadores.Services
         {
             await using var contexto = await DbFactory.CreateDbContextAsync();
             return await contexto.Jugadores
-                .AnyAsync(p => p.JugadorId == jugadorId);
+                .AnyAsync(j => j.JugadorId == jugadorId);
         }
 
         private async Task<bool> Insertar(Jugadores jugador)

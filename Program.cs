@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using RegistroDeJugadores.Components;
 using RegistroDeJugadores.DAL;
 using RegistroDeJugadores.Services;
+using Blazored.Toast;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,8 @@ var ConStr = builder.Configuration.GetConnectionString("SqlConStr");
 builder.Services.AddDbContextFactory<Contexto>(o => o.UseSqlServer(ConStr));
 
 builder.Services.AddScoped<JugadoresService>();
+
+builder.Services.AddBlazoredToast();
 
 var app = builder.Build();
 

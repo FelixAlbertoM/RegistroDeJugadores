@@ -1,0 +1,64 @@
+﻿@page "/Jugador/Create"
+@inject  JugadoresService jugadorService
+@inject NavigationManager navigationManager
+@inject ToastService toastService
+@rendermode InteractiveServer
+
+@*HTML*@
+<PageTitle>Crear nuevo Jugador</PageTitle>
+<EditForm Model="Jugador" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    
+
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header text-center">
+                <h5 class ="card-title">Crear Jugadoor></h5>
+            </div>
+            
+            <div class="card body">
+                
+                @*JugadorId*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>JugadorId</strong></label>
+                    <InputNumber class="form-control" @bind-Value="Jugador.JugadorId" readonly></InputNumber>
+                </div>
+                @*Partidas*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Partidas</strong></label>
+                    <InputNumber class="form-control" @bind-Value="Jugador.Partidas"></InputNumber>
+                    <ValidationMessage For="(() => Jugador.Partidas)"/>
+                </div>
+            </div>
+            
+            @*footer*@
+            <div class="card-footer text-center mt-2">  
+                <a href="/Jugador/Index" class="btn btn-secondary"> <span class="bi bi-arrow-left"></span>"</a>
+                <button type="submit" class="btn btn-primary bi bi-floppy"> Guardar</button>
+            </div>
+        </div>
+    </div>
+
+</EditForm>
+
+@code{
+
+    public Jugadores Jugador { get; set; } = new Jugadores();
+    public string Message { get; set; } = string.Empty;
+
+    public async Task Guardar()
+    {
+        var crear = await jugadorService.Guardar(Jugador);
+        if (crear)
+        {
+            toastService.ShowSuccess("Cobro guardado correctamente");
+            navigationManager.NavigateTo("/Jugador/Index");
+
+        }
+        else
+        {
+            toastService.ShowError("No se pudo guardar Correctamente");
+        }
+    }
+
+}
