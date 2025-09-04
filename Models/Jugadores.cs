@@ -13,7 +13,7 @@ namespace RegistroDeJugadores.Models
         public string Nombres { get; set; }
 
 
-        [Required(ErrorMessage = "La cantidad de partidas son obligatorias")]
+        [Range(0, int.MaxValue, ErrorMessage = "Las partidas no pueden ser negativas")]
         public int Partidas { get; set; }
 
     }
