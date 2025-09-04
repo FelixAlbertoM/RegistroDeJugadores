@@ -45,6 +45,7 @@
 
     public Jugadores Jugador { get; set; } = new Jugadores();
     public string Message { get; set; } = string.Empty;
+    public List<Jugadores> ListaJugadores { get; set; } = new List<Jugadores>();
 
     public async Task Guardar()
     {
