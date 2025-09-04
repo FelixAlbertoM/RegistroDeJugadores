@@ -44,8 +44,8 @@ namespace RegistroDeJugadores.Services
         public async Task<Jugadores?> Buscar(int jugadorId)
         {
             await using var contexto = await DbFactory.CreateDbContextAsync();
-            return await contexto.Jugadores.Include(d => d.Partidas)
-                .FirstOrDefaultAsync(p => p.JugadorId == jugadorId);
+            return await contexto.Jugadores
+                .FirstOrDefaultAsync(j => j.JugadorId == jugadorId);
         }
 
         public async Task<bool> Eliminar(int jugadorId)
@@ -53,16 +53,14 @@ namespace RegistroDeJugadores.Services
             await using var contexto = await DbFactory.CreateDbContextAsync();
             return await contexto.Jugadores
                 .AsNoTracking()
-                .Where(p => p.JugadorId == jugadorId)
+                .Where(j => j.JugadorId == jugadorId)
                 .ExecuteDeleteAsync() > 0;
         }
 
         public async Task<List<Jugadores>> Listar(Expression<Func<Jugadores, bool>> criterio)
         {
             await using var contexto = await DbFactory.CreateDbContextAsync();
-            return await contexto.Jugadores
-                .Where(criterio)
-                .ToListAsync();
+            return await contexto.Jugadores.Where(criterio).AsNoTracking().ToListAsync();
         }
     }
 }
