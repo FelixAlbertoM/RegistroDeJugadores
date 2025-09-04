@@ -67,14 +67,14 @@
 								<td>@jugador.Nombres</td>
 								<td>@jugador.Partidas.ToString("G")</td>
 								<td>
-									<a href="/JugadorEdit/Edit/@jugador.JugadorId" class="btn btn-outline-success btn-sm">
+									<a href="/Jugador/Edit/@jugador.JugadorId" class="btn btn-outline-success btn-sm">
 										<i class="bi bi-pencil"></i>
 									</a>
 								</td>
 								<td>
-									<button class="btn btn-outline-danger btn-sm" @onclick="() => Eliminar(jugador.JugadorId)">
+									<button class="btn btn-outline-danger btn-sm" @onclick="() => Eliminar (jugador.JugadorId)">
 										<i class="bi bi-trash"></i>
-									</button>"
+									</button>
 								</td>
 							</tr>
 						}
