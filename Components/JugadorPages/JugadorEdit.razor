@@ -32,7 +32,7 @@
                 @*Partidas*@
                 <div class="mb-3">
                     <label class="form-label"><strong>Partidas</strong></label>
-                    <InputText class="form-control" @bind-Value="Jugador.Partidas"></InputText>
+                    <InputNumber class="form-control" @bind-Value="Jugador.Partidas"></InputNumber>
                     <ValidationMessage For="(() => Jugador.Partidas)" />
                 </div>
                 
@@ -49,6 +49,7 @@
         </div>
     </div>
 </EditForm>
+
 @code
 {
     [Parameter]
