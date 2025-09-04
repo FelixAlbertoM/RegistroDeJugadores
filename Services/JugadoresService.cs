@@ -9,6 +9,10 @@ namespace RegistroDeJugadores.Services
     {
         public async Task<bool> Guardar(Jugadores jugador)
         {
+            await using var contexto = await DbFactory.CreateDbContextAsync();
+            bool existeNombre = await contexto.Jugadores
+                .AnyAsync(j => j.Nombres == jugador.Nombres && j.JugadorId != jugador.JugadorId);
+
             if (!await Existe(jugador.JugadorId))
             {
                 return await Insertar(jugador);
@@ -17,6 +21,14 @@ namespace RegistroDeJugadores.Services
             {
                 return await Modificar(jugador);
             }
+        }
+
+        public async Task<bool> ExisteNombre(string nombre, int jugadorId = 0)
+        {
+            await using var contexto = await DbFactory.CreateDbContextAsync();
+            return await contexto.Jugadores
+                .AnyAsync(j => j.Nombres.ToLower() == nombre.ToLower()
+                               && j.JugadorId != jugadorId);
         }
 
         private async Task<bool> Existe(int jugadorId)

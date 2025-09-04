@@ -36,18 +36,31 @@
                     </a>
                 </div>
             </EditForm>
+            
+            @if (!string.IsNullOrWhiteSpace(Mensaje))
+            {
+                <div class="alert alert-warning mt-2">@Mensaje</div>
+            }
         </div>
     </div>
 </div>
 
 @code {
     public Jugadores Jugadores { get; set; } = new();
+    public string Mensaje { get; set; } = string.Empty;
+
     private async Task GuardarJugador()
     {
+        if (await JugadoresService.ExisteNombre(Jugadores.Nombres))
+        {
+            Mensaje = "Ya existe un jugador con este nombre.";
+            return;
+        }
         if (await JugadoresService.Guardar(Jugadores))
         {
             NavigationManager.NavigateTo("/Jugador/Index");
         }
+      
 		
     }
 }
