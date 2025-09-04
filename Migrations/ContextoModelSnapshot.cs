@@ -41,7 +41,7 @@ namespace RegistroDeJugadores.Migrations
                     b.HasIndex("Nombres")
                         .IsUnique();
 
-                    b.ToTable("Jugador");
+                    b.ToTable("Jugadores");
                 });
 #pragma warning restore 612, 618
         }

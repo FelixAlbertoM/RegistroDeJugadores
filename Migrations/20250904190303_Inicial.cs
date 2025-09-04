@@ -11,7 +11,7 @@ namespace RegistroDeJugadores.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Jugador",
+                name: "Jugadores",
                 columns: table => new
                 {
                     JugadorId = table.Column<int>(type: "int", nullable: false)
@@ -21,12 +21,12 @@ namespace RegistroDeJugadores.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Jugador", x => x.JugadorId);
+                    table.PrimaryKey("PK_Jugadores", x => x.JugadorId);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Jugador_Nombres",
-                table: "Jugador",
+                name: "IX_Jugadores_Nombres",
+                table: "Jugadores",
                 column: "Nombres",
                 unique: true);
         }
@@ -35,7 +35,7 @@ namespace RegistroDeJugadores.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Jugador");
+                name: "Jugadores");
         }
     }
 }

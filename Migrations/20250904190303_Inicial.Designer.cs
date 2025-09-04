@@ -11,7 +11,7 @@ using RegistroDeJugadores.DAL;
 namespace RegistroDeJugadores.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20250903131820_Inicial")]
+    [Migration("20250904190303_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -44,7 +44,7 @@ namespace RegistroDeJugadores.Migrations
                     b.HasIndex("Nombres")
                         .IsUnique();
 
-                    b.ToTable("Jugador");
+                    b.ToTable("Jugadores");
                 });
 #pragma warning restore 612, 618
         }
