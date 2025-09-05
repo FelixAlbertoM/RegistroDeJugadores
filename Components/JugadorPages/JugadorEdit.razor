@@ -16,7 +16,11 @@
 			</div>
 			<div class="card-body">
 				<EditForm Model="Jugadores" OnValidSubmit="GuardarCambios">
-					<DataAnnotationsValidator />
+                    <DataAnnotationsValidator />
+                    @if (!string.IsNullOrWhiteSpace(Mensaje))
+                    {
+                        <div class="alert alert-danger mt-2">@Mensaje</div>
+                    }
 					<div class="row">
 						<div class="col-md-6 mb-3">
 							<label for="nombre" class="form-label fw-bold">Nombre:</label>
@@ -72,9 +76,13 @@ else
 		</div>
 	</div>
 }
+
+
 @code {
 	[Parameter]
 	public int JugadorId { get; set; }
+
+    public string Mensaje { get; set; } = string.Empty;
 	public Jugadores? Jugadores { get; set; }
 	private bool MostrarModalEliminar { get; set; } = false;
 
@@ -86,6 +94,11 @@ else
 	{
 		if (Jugadores != null)
 		{
+            if (await JugadoresService.ExisteNombre(Jugadores.Nombres, Jugadores.JugadorId))
+            {
+                Mensaje = " No se puede agregar 2 personnas con el mismo nombre.";
+                return;
+            }
 			if (await JugadoresService.Guardar(Jugadores))
 			{
 				NavigationManager.NavigateTo("/Jugador/Index");
