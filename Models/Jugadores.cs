@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace RegistroDeJugadores.Models
@@ -7,6 +8,7 @@ namespace RegistroDeJugadores.Models
     public class Jugadores
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int JugadorId { get; set; }
 
         [Required(ErrorMessage = "El nombre es obligatorio")]
