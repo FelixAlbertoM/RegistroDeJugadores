@@ -72,7 +72,7 @@
 									</a>
 								</td>
 								<td>
-									<button class="btn btn-outline-danger btn-sm" @onclick="() => Eliminar (jugador.JugadorId)">
+									<button class="btn btn-outline-danger btn-sm" @onclick="() => MostrarModalEliminar(jugador)">
 										<i class="bi bi-trash"></i>
 									</button>
 								</td>
@@ -85,15 +85,41 @@
 	</div>
 </div>
 
+@if (MostrarPanelEliminar)
+{
+	<div class="card border-danger mt-4">
+		<div class="card-header bg-primary text-white">
+			<h5 class="mb-0">Eliminar Jugador</h5>
+		</div>
+		<div class="card-body">
+			<p class="text-danger fw-bold">¿Estás seguro de que quieres eliminar este jugador?</p>
+
+			<div class="border p-3 bg-light">
+				<p><strong>JugadorId:</strong> @JugadorSeleccionado?.JugadorId</p>
+				<p><strong>Nombre:</strong> @JugadorSeleccionado?.Nombres</p>
+				<p><strong>Partidas:</strong> @JugadorSeleccionado?.Partidas</p>
+			</div>
+		</div>
+		<div class="card-footer d-flex justify-content-end gap-2">
+			<button class="btn btn-secondary" @onclick="CancelarEliminar">Cancelar</button>
+			<button class="btn btn-danger" @onclick="ConfirmarEliminar">Eliminar</button>
+		</div>
+	</div>
+}
+
 @code {
 	public List<Jugadores> ListaJugadores { get; set; } = new();
 	public string Filtro { get; set; } = "JugadorId";
 	public string ValorFiltro { get; set; } = string.Empty;
 
+	private bool MostrarPanelEliminar { get; set; } = false;
+	private Jugadores? JugadorSeleccionado { get; set; }
+
 	protected override async Task OnInitializedAsync()
 	{
 		await CargarJugadores();
 	}
+
 	private async Task CargarJugadores()
 	{
 		var lista = await jugadoresService.Listar(j => true);
@@ -111,16 +137,33 @@
 		}
 		ListaJugadores = lista;
 	}
+
 	private async Task Buscar()
 	{
 		await CargarJugadores();
 	}
 
-	private async Task Eliminar(int jugadorId)
+	private void MostrarModalEliminar(Jugadores jugador)
 	{
-		if (await jugadoresService.Eliminar(jugadorId))
+		JugadorSeleccionado = jugador;
+		MostrarPanelEliminar = true;
+	}
+
+	private void CancelarEliminar()
+	{
+		MostrarPanelEliminar = false;
+		JugadorSeleccionado = null;
+	}
+
+	private async Task ConfirmarEliminar()
+	{
+		if (JugadorSeleccionado != null)
 		{
-			await CargarJugadores();
+			if (await jugadoresService.Eliminar(JugadorSeleccionado.JugadorId))
+			{
+				await CargarJugadores();
+			}
 		}
+		CancelarEliminar();
 	}
 }
