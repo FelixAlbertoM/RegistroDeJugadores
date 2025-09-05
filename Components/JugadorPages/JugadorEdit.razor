@@ -61,12 +61,18 @@ else
 	<div class="modal d-block" tabindex="-1" role="dialog" style="background-color:rgba(0,0,0,0.5);">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<div class="modal-header">
+				<div class="modal-header bg-primay text-white">
 					<h5 class="modal-title">Confirmar Eliminación</h5>
 					<button type="button" class="btn-close" @onclick="() => MostrarModalEliminar = false"></button>
 				</div>
 				<div class="modal-body">
-					<p>¿Estás seguro de que deseas eliminar este jugador?</p>
+                    <p>¿Estás seguro de que deseas eliminar este jugador?</p>
+                    <div class="border rounded p-3 bg-light">
+                        <h6 class="fw-bold"> Datos del jugador</h6>
+                        <p><strong> JugadorId:</strong> @Jugadores.JugadorId</p>
+                        <p><strong> Nombre:</strong> @Jugadores.Nombres</p>
+                        <p><strong> Partidas:</strong> @Jugadores.Partidas</p>
+                    </div>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" @onclick="() => MostrarModalEliminar = false">Cancelar</button>
