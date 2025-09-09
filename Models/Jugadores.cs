@@ -2,8 +2,8 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace RegistroDeJugadores.Models
-{
+namespace RegistroDeJugadores.Models;
+
     [Index(nameof(Nombres), IsUnique = true)]
     public class Jugadores
     {
@@ -19,4 +19,4 @@ namespace RegistroDeJugadores.Models
         public int Partidas { get; set; }
 
     }
-}
+

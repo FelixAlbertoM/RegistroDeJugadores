@@ -51,6 +51,7 @@
 
     private async Task GuardarJugador()
     {
+        var nombre = Jugadores.Nombres ?? string.Empty;
         if (await JugadoresService.ExisteNombre(Jugadores.Nombres))
         {
             Mensaje = "Ya existe un jugador con este nombre.";
@@ -59,6 +60,10 @@
         if (await JugadoresService.Guardar(Jugadores))
         {
             NavigationManager.NavigateTo("/Jugador/Index");
+        }
+        else
+        {
+            Mensaje = " no se puede guardar el jugador.";
         }
       
 		

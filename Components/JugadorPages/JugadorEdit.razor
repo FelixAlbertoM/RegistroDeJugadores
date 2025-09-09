@@ -88,7 +88,7 @@ else
 	[Parameter]
 	public int JugadorId { get; set; }
 
-    public string Mensaje { get; set; } = string.Empty;
+	public string Mensaje { get; set; } = string.Empty;
 	public Jugadores? Jugadores { get; set; }
 	private bool MostrarModalEliminar { get; set; } = false;
 
@@ -100,14 +100,19 @@ else
 	{
 		if (Jugadores != null)
 		{
-            if (await JugadoresService.ExisteNombre(Jugadores.Nombres, Jugadores.JugadorId))
-            {
-                Mensaje = " No se puede agregar 2 personnas con el mismo nombre.";
-                return;
-            }
+			var nombre = Jugadores.Nombres ?? string.Empty;
+			if (await JugadoresService.ExisteNombre(Jugadores.Nombres, Jugadores.JugadorId))
+			{
+				Mensaje = " No se puede agregar 2 personnas con el mismo nombre.";
+				return;
+			}
 			if (await JugadoresService.Guardar(Jugadores))
 			{
 				NavigationManager.NavigateTo("/Jugador/Index");
+			}
+			else
+			{
+				Mensaje = " No se pudo guardar el jugador";
 			}
 		}
 	}
@@ -123,12 +128,3 @@ else
 		}
 	}
 }
-
-
-
-
-
-
-
-
-

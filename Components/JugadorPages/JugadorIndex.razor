@@ -85,7 +85,7 @@
 	</div>
 </div>
 
-@if (MostrarPanelEliminar)
+@if (EsVisibleModalEliminar)
 {
 	<div class="card border-danger mt-4">
 		<div class="card-header bg-primary text-white">
@@ -112,7 +112,7 @@
 	public string Filtro { get; set; } = "JugadorId";
 	public string ValorFiltro { get; set; } = string.Empty;
 
-	private bool MostrarPanelEliminar { get; set; } = false;
+	private bool EsVisibleModalEliminar { get; set; } = false;
 	private Jugadores? JugadorSeleccionado { get; set; }
 
 	protected override async Task OnInitializedAsync()
@@ -132,7 +132,7 @@
 			}
 			else if (Filtro == "Nombre")
 			{
-				lista = lista.Where(j => j.Nombres != null && j.Nombres.Contains(ValorFiltro, StringComparison.OrdinalIgnoreCase)).ToList();
+				lista = lista.Where(j => !string.IsNullOrEmpty(j.Nombres) && j.Nombres.Contains(ValorFiltro, StringComparison.OrdinalIgnoreCase)).ToList();
 			}
 		}
 		ListaJugadores = lista;
@@ -146,12 +146,12 @@
 	private void MostrarModalEliminar(Jugadores jugador)
 	{
 		JugadorSeleccionado = jugador;
-		MostrarPanelEliminar = true;
+		EsVisibleModalEliminar = true;
 	}
 
 	private void CancelarEliminar()
 	{
-		MostrarPanelEliminar = false;
+		EsVisibleModalEliminar = false;
 		JugadorSeleccionado = null;
 	}
 
