@@ -12,20 +12,19 @@ public class Partidas
 
     [Required]
     [StringLength(20)]
-    public string EstadoPartida { get; set; }
+    public string EstadoPartida { get; set; } 
 
     public int? GanadorId { get; set; }
-    public int TurnoJugadorId { get; set; }
+    public int? TurnoJugadorId { get; set; }
 
-    [StringLength(9)]
-    public string EstadoTablero { get; set; }
+    [StringLength(9)] public string EstadoTablero { get; set; } = "3x3";
 
     public DateTime FechaInicio { get; set; } = DateTime.UtcNow;
     public DateTime? FechaFin { get; set; }
 
     // Propiedades de navegacion
     [ForeignKey(nameof(Jugador1Id))]
-    public virtual Jugadores Jugador1 { get; set; }
+    public virtual Jugadores Jugador1 { get; set; }= null!;
 
     [ForeignKey(nameof(Jugador2Id))]
     public virtual Jugadores? Jugador2 { get; set; }
