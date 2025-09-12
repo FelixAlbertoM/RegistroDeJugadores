@@ -1,5 +1,76 @@
-﻿<h3>PartidasCreate</h3>
+﻿@page "/Partidas/Create/"
+@inject PartidasService partidasService
+@inject JugadoresService jugadoresService
+@inject NavigationManager NavigationManager
 
-@code {
+<PageTitle Crear Partida></PageTitle>
 
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-white text-center">
+            <h5 class="mb-0">Crear Partida</h5>
+        </div>
+        <div class="card-body">
+            <EditForm Model="Partida" OnValidSubmit="GuardarPartida">
+                <DataAnnotationsValidator/>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Jugador 1</label>
+                        <InputSelect class="form-select" @bind-Value="Partida.Jugador1Id">
+                            <option value="">-- Seleccione Jugador 1 --</option>
+                            @foreach (var jugador in ListaJugadores)
+                            {
+                                <option value="@jugador.JugadorId">@jugador.Nombres</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Jugador 2</label>
+                        <InputSelect class="form-select" @bind-Value="Partida.Jugador2Id">
+                            <option value="">Seleccione un Jugador</option>
+                            @foreach (var jugador in ListaJugadores)
+                            {
+                                <option value="@jugador.JugadorId">@jugador.Nombres</option>
+                            }
+                        </InputSelect>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Estado de la Partida</label>
+                    <InputText class="form-control" @bind-Value="Partida.EstadoPartida"/>
+                </div>
+                
+                <div class="card-footer text-center">
+                    <button type="submit" class="btn btn-success">
+                        <i class ="bi bi-save"></i> Guardar
+                    </button>
+                    <a href="/Partidas/index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left-circle"></i> Cancelar
+                    </a>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div> 
+
+@code
+{
+    private Partidas Partida { get; set; } = new();
+    private List<Jugadores> ListaJugadores { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaJugadores = await jugadoresService.Listar(j => true);
+    }
+
+    private async Task GuardarPartida()
+    {
+        if (await partidasService.Guardar(Partida))
+        {
+            NavigationManager.NavigateTo("/Partidas/index"); 
+        }
+    }
 }
