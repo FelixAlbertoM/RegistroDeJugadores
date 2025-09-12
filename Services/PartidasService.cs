@@ -165,9 +165,11 @@ public class PartidasService
         return await contexto.Partidas.CountAsync();
     }
 
-    public async Task<int> TotalPartidasGanadas(int jugadorId)
+    public async Task<int> TotalPartidasGanadas(int jugadorId= 0)
     {
         await using var contexto = await _dbFactory.CreateDbContextAsync();
-        return await contexto.Partidas.CountAsync(p => p.GanadorId == jugadorId);
+        return jugadorId == 0
+            ? await contexto.Partidas.CountAsync(p => p.GanadorId != null)
+            : await contexto.Partidas.CountAsync(p => p.GanadorId == jugadorId);
     }
 }
