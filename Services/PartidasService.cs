@@ -159,7 +159,7 @@ public class PartidasService
         }
     }
 
-    public async Task<int> TotlaPartidasJugadas()
+    public async Task<int> TotalPartidasJugadas()
     {
         await using var contexto = await _dbFactory.CreateDbContextAsync();
         return await contexto.Partidas.CountAsync();
