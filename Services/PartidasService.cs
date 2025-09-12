@@ -159,20 +159,15 @@ public class PartidasService
         }
     }
 
-    public async Task<(int jugadas, int ganadas)> Estadisticas()
+    public async Task<int> TotlaPartidasJugadas()
     {
-        try
-        {
-            await using var contexto = await _dbFactory.CreateDbContextAsync();
-            var jugadas = await contexto.Partidas.CountAsync();
-            var ganadas = await contexto.Partidas.CountAsync(p => p.GanadorId != null);
-            return (jugadas, ganadas);
+        await using var contexto = await _dbFactory.CreateDbContextAsync();
+        return await contexto.Partidas.CountAsync();
+    }
 
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error al obtener las estadisticas");
-            return (0, 0);
-        }
+    public async Task<int> TotalPartidasGanadas(int jugadorId)
+    {
+        await using var contexto = await _dbFactory.CreateDbContextAsync();
+        return await contexto.Partidas.CountAsync(p => p.GanadorId == jugadorId);
     }
 }
