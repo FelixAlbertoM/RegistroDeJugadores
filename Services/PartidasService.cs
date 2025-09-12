@@ -1,7 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using RegistroDeJugadores.DAL;
-using RegistroDeJugadores.DTOs;
 using RegistroDeJugadores.Models;
 
 namespace RegistroDeJugadores.Services;
@@ -131,33 +130,6 @@ public class PartidasService
         }
     }
 
-    public async Task<List<PartidaDTO>> ListarDTO(Expression<Func<Partidas, bool>> criterio)
-    {
-        try
-        {
-            await using var contexto = await _dbFactory.CreateDbContextAsync();
-            return await contexto.Partidas
-                .Include(p => p.Jugador1!)
-                .Include(p => p.Jugador2!)
-                .Include(p => p.Ganador)
-                .Where(criterio)
-                .Select(p => new PartidaDTO
-                {
-                    PartidaId = p.PartidaId,
-                    Jugador1 = p.Jugador1.Nombres,
-                    Jugador2 = p.Jugador2 != null ? p.Jugador2.Nombres : "N/A",
-                    EstadoPartida = p.EstadoPartida,
-                    Ganador = p.Ganador != null ? p.Ganador.Nombres : " no hay ganador"
-                })
-                .AsNoTracking()
-                .ToListAsync();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error listando las partidas");
-            return new List<PartidaDTO>();
-        }
-    }
 
     public async Task<int> TotalPartidasJugadas()
     {

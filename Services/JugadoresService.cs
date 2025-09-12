@@ -1,7 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using RegistroDeJugadores.DAL;
-using RegistroDeJugadores.DTOs;
 using RegistroDeJugadores.Models;
 
 namespace RegistroDeJugadores.Services;
@@ -57,7 +56,6 @@ public class JugadoresService
 
     private async Task<bool> Insertar(Jugadores jugador)
     {
-
         try
         { 
             await using var contexto = await DbFactory.CreateDbContextAsync();
@@ -141,28 +139,6 @@ public class JugadoresService
         }
     }
 
-    public async Task<List<JugadorDTO>> ListarDTO(Expression<Func<Jugadores, bool>> criterio)
-    {
-        try
-        {
-            await using var contexto = await DbFactory.CreateDbContextAsync();
-            return await contexto.Jugadores
-                .Where(criterio)
-                .Select(j => new JugadorDTO
-                {
-                    JugadorId = j.JugadorId,
-                    Nombres = j.Nombres,
-                    Partidas = j.Partidas
-                })
-                .AsNoTracking()
-                .ToListAsync();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error listando jugadores (DTO)");
-            return new List<JugadorDTO>();
-        }
-    }
 }
 
 
