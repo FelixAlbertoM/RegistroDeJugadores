@@ -19,26 +19,35 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">Jugador 1</label>
-                        <InputSelect class="form-select" @bind-Value="Partida.Jugador1Id">
-                            <option value="">-- Seleccione Jugador 1 --</option>
-                            @foreach (var jugador in ListaJugadores)
-                            {
-                                <option value="@jugador.JugadorId">@jugador.Nombres</option>
-                            }
-                        </InputSelect>
-                        <ValidationMessage For="@(() => Partida.Jugador1Id)" />
+                        @if (ListaJugadores.Any())
+                        {
+                            <InputSelect class="form-select" @bind-Value="Partida.Jugador1Id">
+                                <option value="0">-- Seleccione Jugador 1 --</option>
+                                @foreach (var jugador in ListaJugadores)
+                                {
+                                    <option value="@jugador.JugadorId">@jugador.Nombres</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => Partida.Jugador1Id)" />
+                        }
+                        else
+                        {
+                            <p class="text-warning">No hay jugadores para seleccionar.</p>
+                        }
                     </div>
-                    
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">Jugador 2</label>
-                        <InputSelect class="form-select" @bind-Value="Partida.Jugador2Id">
-                            <option value="">Seleccione un Jugador</option>
-                            @foreach (var jugador in ListaJugadores)
-                            {
-                                <option value="@jugador.JugadorId">@jugador.Nombres</option>
-                            }
-                        </InputSelect>
-                        <ValidationMessage For="@(() => Partida.Jugador2Id)" />
+                        @if (ListaJugadores.Any())
+                        {
+                            <InputSelect class="form-select" @bind-Value="Partida.Jugador2Id">
+                                <option value="0">Seleccione un Jugador</option>
+                                @foreach (var jugador in ListaJugadores.Where(j => j.JugadorId != Partida.Jugador1Id || Partida.Jugador1Id == 0))
+                                {
+                                    <option value="@jugador.JugadorId">@jugador.Nombres</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => Partida.Jugador2Id)" />
+                        }
                     </div>
                 </div>
 
@@ -79,8 +88,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ListaJugadores = await jugadoresService.Listar(j => true);
-        Partida.EstadoTablero = "3x3";
+        ListaJugadores = await jugadoresService.Listar(j => true) ?? new List<Jugadores>();
+        if (!ListaJugadores.Any())
+        {
+            Mensaje = "No hay jugadores disponibles. Crea al menos un jugador primero.";
+        }
     }
 
     private async Task GuardarPartida()
