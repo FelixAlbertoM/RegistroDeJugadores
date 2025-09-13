@@ -140,7 +140,7 @@
     {
         await CargarPartidas();
     }
-
+     
     private async Task CargarPartidas()
     {
         ListaPartidas = await partidasService.Listar(p => true);
