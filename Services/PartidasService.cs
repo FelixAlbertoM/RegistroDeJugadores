@@ -65,7 +65,9 @@ public class PartidasService
     {
         try
         {
-            return !await Existe(partida.PartidaId)
+            bool existe = await Existe(partida.PartidaId);
+            _logger.LogInformation("Partida {PartidaId} existe: {Existe}", partida.PartidaId, existe);
+            return !existe
                 ? await Insertar(partida)
                 : await Modificar(partida);
         }
@@ -119,6 +121,7 @@ public class PartidasService
                 .Include(p => p.Jugador1)
                 .Include(p => p.Jugador2)
                 .Include(p => p.Ganador)
+                .Include(p => p.TurnoJugador)
                 .AsQueryable();
             query = query.Where(criterio);
             return await query.AsNoTracking().ToListAsync();
@@ -137,11 +140,19 @@ public class PartidasService
         return await contexto.Partidas.CountAsync();
     }
 
-    public async Task<int> TotalPartidasGanadas(int jugadorId= 0)
+    public async Task<int> TotalPartidasGanadas(int jugadorId = 0)
     {
-        await using var contexto = await _dbFactory.CreateDbContextAsync();
-        return jugadorId == 0
-            ? await contexto.Partidas.CountAsync(p => p.GanadorId != null)
-            : await contexto.Partidas.CountAsync(p => p.GanadorId == jugadorId);
+        try
+        {
+            await using var contexto = await _dbFactory.CreateDbContextAsync();
+            return jugadorId == 0
+                ? await contexto.Partidas.CountAsync(p => p.GanadorId != null)
+                : await contexto.Partidas.CountAsync(p => p.GanadorId == jugadorId);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error calculando total de partidas ganadas");
+            return 0;
+        }
     }
 }
