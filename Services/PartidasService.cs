@@ -122,9 +122,9 @@ public class PartidasService
                 .Include(p => p.Jugador2)
                 .Include(p => p.Ganador)
                 .Include(p => p.TurnoJugador)
-                .AsQueryable();
-            query = query.Where(criterio);
-            return await query.AsNoTracking().ToListAsync();
+                .Where(criterio);
+            var resultados= await query.AsNoTracking().ToListAsync();
+            return resultados.Where(p => p.Jugador1 != null || p.Jugador2 != null).ToList();
         }
         catch (Exception ex)
         {
