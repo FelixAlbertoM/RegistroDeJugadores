@@ -1,0 +1,182 @@
+﻿@page "/Partidas/Edit/{PartidaId:int}"
+@using RegistroDeJugadores.Models
+@using RegistroDeJugadores.Services
+@inject PartidasService partidasService
+@inject JugadoresService jugadoresService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle> Editar Partida</PageTitle>
+
+@if (Partida != null)
+{
+    <div class="container mt-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white text-center">
+                <h5 class="mb-0">Editar Partida</h5>
+            </div>
+            <div class="card-body">
+                <EditForm Model="Partida" OnValidSubmit="GuardarCambios">
+                    <DataAnnotationsValidator />
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold"> Jugador 1</label>
+                            <InputSelect class="form-control form-select" @bind-Value="Partida.Jugador1Id" @onchange="OnJugador1Changed">
+                                <option value="0" disabled>Seleccione Jugador 1</option>
+                                @foreach (var jugador in ListaJugadores)
+                                {
+                                    <option value="@jugador.JugadorId">@jugador.Nombres</option>
+                                }
+                            </InputSelect>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold"> Jugador 2</label>
+                            <InputSelect class="form-select" @bind-Value="Partida.Jugador2Id" disabled="@(Partida.Jugador1Id == 0)">
+                                <option value="0" disabled>Seleccione Jugador 2</option>
+                                @foreach (var jugador in ListaJugadores)
+                                {
+                                    if (jugador.JugadorId != Partida.Jugador1Id)
+                                    {
+                                        <option value="@jugador.JugadorId">@jugador.Nombres</option>
+                                    }
+                                }
+                            </InputSelect>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Turno Inicial</label>
+                        <InputSelect class="form-select" @bind-Value="Partida.TurnoJugadorId" disabled="@(AmbosJugadoresSeleccionados)">
+                            <option value="0" disabled>Seleccione jugador inicial</option>
+                            @if (Partida.Jugador1Id > 0)
+                            {
+                                <option value="@Partida.Jugador1Id">@ListaJugadores.First(j => j.JugadorId == Partida.Jugador1Id).Nombres</option>
+                            }
+                            @if (Partida.Jugador2Id > 0)
+                            {
+                                <option value="@Partida.Jugador2Id">@ListaJugadores.First(j => j.JugadorId == Partida.Jugador2Id).Nombres</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Ganador</label>
+                        <InputSelect class="form-select" @bind-Value="Partida.GanadorId">
+                            <option value="">-- Seleccione Ganador --</option>
+                            @foreach (var jugador in ListaJugadores)
+                            {
+                                <option value="@jugador.JugadorId">@jugador.Nombres</option>
+                            }
+                        </InputSelect>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Estado de la Partida</label>
+                        <InputSelect class="form-control form-select" @bind-Value="Partida.EstadoPartida">
+                            <option value="" disabled>Seleccione estado</option>
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="En Juego">En Juego</option>
+                            <option value="Finalizada">Finalizada</option>
+                        </InputSelect>
+                    </div>
+
+                    <div class="card-footer text-center">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Guardar Cambios
+                        </button>
+                        <a href="/Partidas/Index" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left-circle"></i> Cancelar
+                        </a>
+                        <button type="button" class="btn btn-danger" @onclick="() => EsVisibleModalEliminar = true">
+                            <i class="bi bi-trash"></i> Eliminar
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="text-center mt-5">
+        <p class="lead text-muted"> Cargando datos de la Partida..</p>
+    </div>
+}
+
+@if (EsVisibleModalEliminar)
+{
+    <div class="card border-danger mt-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Eliminar Partida</h5>
+            <button type="button" class="btn-close" @onclick="() => EsVisibleModalEliminar = false"></button>
+        </div>
+        <div class="card-body">
+            <p class="text-danger fw-bold">¿Estás seguro de que quieres eliminar esta partida?</p>
+            <div class="border rounded p-3 bg-light">
+                <h6 class="fw-bold">Datos de la Partida</h6>
+                <p><strong>PartidaId:</strong> @Partida.PartidaId</p>
+                <p><strong>Jugador 1:</strong> @Partida.Jugador1?.Nombres</p>
+                <p><strong>Jugador 2:</strong> @Partida.Jugador2?.Nombres</p>
+                <p><strong>Estado:</strong> @Partida.EstadoPartida</p>
+            </div>
+        </div>
+        <div class="card-footer d-flex gap-2">
+            <button class="btn btn-secondary" @onclick="() => EsVisibleModalEliminar = false">Cancelar</button>
+            <button class="btn btn-danger" @onclick="EliminarPartida">Eliminar</button>
+        </div>
+    </div>
+}
+
+@code {
+
+    [Parameter] public int PartidaId { get; set; }
+    private Partidas? Partida { get; set; }
+    private List<Jugadores> ListaJugadores { get; set; } = new();
+    private bool EsVisibleModalEliminar { get; set; } = false;
+    
+    private bool AmbosJugadoresSeleccionados => 
+        Partida?.Jugador1Id > 0 && Partida?.Jugador2Id > 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Partida = await partidasService.Buscar(PartidaId);
+        ListaJugadores = await jugadoresService.Listar(j => true);
+    }
+
+    private async Task GuardarCambios()
+    {
+        if (Partida != null)
+        {
+            if (await partidasService.Guardar(Partida))
+            {
+                NavigationManager.NavigateTo("/Partidas/Index");
+            }
+            
+        }
+    }
+
+    private async Task EliminarPartida()
+    {
+        if (Partida != null)
+        {
+            if (await partidasService.Eliminar(Partida.PartidaId))
+            {
+                EsVisibleModalEliminar = false;
+                NavigationManager.NavigateTo("/Partidas/Index");
+            }
+        }
+    }
+
+    private void OnJugador1Changed(ChangeEventArgs e)
+    {
+        if (Partida != null)
+        {
+            Partida.Jugador2Id = 0;
+            Partida.TurnoJugadorId = 0;
+        }
+
+    }
+
+}
