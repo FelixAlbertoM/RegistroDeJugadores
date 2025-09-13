@@ -115,7 +115,7 @@ public class PartidasService
     public async Task<List<Partidas>> Listar(Expression<Func<Partidas, bool>> criterio)
     {
         try
-        {
+        { 
             await using var contexto = await _dbFactory.CreateDbContextAsync();
             var query = contexto.Partidas
                 .Include(p => p.Jugador1)
