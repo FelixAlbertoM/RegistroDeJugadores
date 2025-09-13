@@ -20,6 +20,10 @@
                     <DataAnnotationsValidator />
 
                     <div class="row">
+                        @if (!string.IsNullOrEmpty(Mensaje))
+                        {
+                            <div class="alert alert-danger mt-2">@Mensaje</div>
+                        }
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold"> Jugador 1</label>
                             <InputSelect class="form-control form-select" @bind-Value="Partida.Jugador1Id" @onchange="OnJugador1Changed">
@@ -135,6 +139,7 @@ else
     private Partidas? Partida { get; set; }
     private List<Jugadores> ListaJugadores { get; set; } = new();
     private bool EsVisibleModalEliminar { get; set; } = false;
+    private string Mensaje { get; set; } = string.Empty;
     
     private bool AmbosJugadoresSeleccionados => 
         Partida?.Jugador1Id > 0 && Partida?.Jugador2Id > 0;
@@ -165,6 +170,10 @@ else
             {
                 EsVisibleModalEliminar = false;
                 NavigationManager.NavigateTo("/Partidas/Index");
+            }
+            else
+            {
+                Mensaje = "Error al eliminar la partida. Verifica los datos de nuevo"; 
             }
         }
     }
