@@ -12,7 +12,7 @@ using RegistroDeJugadores.DAL;
 namespace RegistroDeJugadores.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20250912220003_Inicial")]
+    [Migration("20250913022533_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
