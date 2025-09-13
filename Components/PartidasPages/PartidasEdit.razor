@@ -4,6 +4,7 @@
 @inject PartidasService partidasService
 @inject JugadoresService jugadoresService
 @inject NavigationManager NavigationManager
+@rendermode InteractiveServer
 
 <PageTitle> Editar Partida</PageTitle>
 
@@ -23,26 +24,52 @@
                             <label class="form-label fw-bold"> Jugador 1</label>
                             <InputSelect class="form-control form-select" @bind-Value="Partida.Jugador1Id" @onchange="OnJugador1Changed">
                                 <option value="0" disabled>Seleccione Jugador 1</option>
-                                @for (int i = 0; i < ListaJugadores.Count; i++)
+                                @foreach (var jugador in ListaJugadores)
                                 {
-                                    <option value="@ListaJugadores[i].JugadorId">@ListaJugadores[i].Nombres</option>
+                                    <option value="@jugador.JugadorId">@jugador.Nombres</option>
                                 }
                             </InputSelect>
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold"> Jugador 2</label>
-                            <InputSelect class="form-select" @bind-Value="Partida.Jugador2Id" disabled="@(!HabilitarJugador2)">
+                            <InputSelect class="form-select" @bind-Value="Partida.Jugador2Id" disabled="@(Partida.Jugador1Id == 0)">
                                 <option value="0" disabled>Seleccione Jugador 2</option>
-                                @for (int i = 0; i < ListaJugadores.Count; i++)
+                                @foreach (var jugador in ListaJugadores)
                                 {
-                                    @if (ListaJugadores[i].JugadorId != Partida.Jugador1Id)
+                                    if (jugador.JugadorId != Partida.Jugador1Id)
                                     {
-                                        <option value="@ListaJugadores[i].JugadorId">@ListaJugadores[i].Nombres</option>
+                                        <option value="@jugador.JugadorId">@jugador.Nombres</option>
                                     }
                                 }
                             </InputSelect>
                         </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Turno Inicial</label>
+                        <InputSelect class="form-select" @bind-Value="Partida.TurnoJugadorId" disabled="@(AmbosJugadoresSeleccionados)">
+                            <option value="0" disabled>Seleccione jugador inicial</option>
+                            @if (Partida.Jugador1Id > 0)
+                            {
+                                <option value="@Partida.Jugador1Id">@ListaJugadores.First(j => j.JugadorId == Partida.Jugador1Id).Nombres</option>
+                            }
+                            @if (Partida.Jugador2Id > 0)
+                            {
+                                <option value="@Partida.Jugador2Id">@ListaJugadores.First(j => j.JugadorId == Partida.Jugador2Id).Nombres</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Ganador</label>
+                        <InputSelect class="form-select" @bind-Value="Partida.GanadorId">
+                            <option value="">-- Seleccione Ganador --</option>
+                            @foreach (var jugador in ListaJugadores)
+                            {
+                                <option value="@jugador.JugadorId">@jugador.Nombres</option>
+                            }
+                        </InputSelect>
                     </div>
 
                     <div class="mb-3">
@@ -70,7 +97,7 @@
             </div>
         </div>
     </div>
-    }
+}
 else
 {
     <div class="text-center mt-5">
@@ -108,7 +135,9 @@ else
     private Partidas? Partida { get; set; }
     private List<Jugadores> ListaJugadores { get; set; } = new();
     private bool EsVisibleModalEliminar { get; set; } = false;
-    private bool HabilitarJugador2 => Partida.Jugador1Id > 0;
+    
+    private bool AmbosJugadoresSeleccionados => 
+        Partida?.Jugador1Id > 0 && Partida?.Jugador2Id > 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -124,6 +153,7 @@ else
             {
                 NavigationManager.NavigateTo("/Partidas/Index");
             }
+            
         }
     }
 
@@ -141,8 +171,12 @@ else
 
     private void OnJugador1Changed(ChangeEventArgs e)
     {
-        Partida.Jugador2Id = null;
-        Partida.TurnoJugadorId= 0;
+        if (Partida != null)
+        {
+            Partida.Jugador2Id = 0;
+            Partida.TurnoJugadorId = 0;
+        }
+
     }
 
 }

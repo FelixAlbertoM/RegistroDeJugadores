@@ -2,8 +2,9 @@
 @inject PartidasService partidasService
 @inject JugadoresService jugadoresService
 @inject NavigationManager NavigationManager
+@rendermode InteractiveServer
 
-<PageTitle Crear Partida></PageTitle>
+<PageTitle> Crear Partida></PageTitle>
 
 <div class="container mt-4">
     <div class="card shadow-sm">
@@ -13,6 +14,7 @@
         <div class="card-body">
             <EditForm Model="Partida" OnValidSubmit="GuardarPartida">
                 <DataAnnotationsValidator/>
+                <ValidationSummary/>
                 
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -24,6 +26,7 @@
                                 <option value="@jugador.JugadorId">@jugador.Nombres</option>
                             }
                         </InputSelect>
+                        <ValidationMessage For="@(() => Partida.Jugador1Id)" />
                     </div>
                     
                     <div class="col-md-6 mb-3">
@@ -35,12 +38,20 @@
                                 <option value="@jugador.JugadorId">@jugador.Nombres</option>
                             }
                         </InputSelect>
+                        <ValidationMessage For="@(() => Partida.Jugador2Id)" />
                     </div>
                 </div>
-                
+
+
                 <div class="mb-3">
                     <label class="form-label fw-bold">Estado de la Partida</label>
-                    <InputText class="form-control" @bind-Value="Partida.EstadoPartida"/>
+                    <InputSelect class="form-control form-select" @bind-Value="Partida.EstadoPartida">
+                        <option value="" disabled>Seleccione estado</option>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="En Juego">En Juego</option>
+                        <option value="Finalizada">Finalizada</option>
+                    </InputSelect>
+                    <ValidationMessage For="@(() => Partida.EstadoPartida)" />
                 </div>
                 
                 <div class="card-footer text-center">
@@ -52,6 +63,10 @@
                     </a>
                 </div>
             </EditForm>
+            @if (!string.IsNullOrEmpty(Mensaje))
+            {
+                <div class="alert alert-warning mt-2">@Mensaje</div>
+            }
         </div>
     </div>
 </div> 
@@ -60,17 +75,33 @@
 {
     private Partidas Partida { get; set; } = new();
     private List<Jugadores> ListaJugadores { get; set; } = new();
+    private string Mensaje { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
         ListaJugadores = await jugadoresService.Listar(j => true);
+        Partida.EstadoTablero = "3x3";
     }
 
     private async Task GuardarPartida()
     {
+        if (Partida.Jugador1Id==0 || Partida.Jugador2Id==0)
+        {
+            Mensaje = "Debe seleccionar ambos jugadores.";
+            return;
+        }
+        if (Partida.Jugador1Id == Partida.Jugador2Id)
+        {
+            Mensaje = "Jugador 1 y Jugador 2 no pueden ser los mismos.";
+            return;
+        }
         if (await partidasService.Guardar(Partida))
         {
             NavigationManager.NavigateTo("/Partidas/index"); 
+        }
+        else
+        {
+            Mensaje = " No se puede guardar la partida.";
         }
     }
 }

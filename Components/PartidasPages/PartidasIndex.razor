@@ -1,7 +1,8 @@
 ﻿@page "/Partidas/Index"
-
+@inject JugadoresService JugadoresService
 @inject PartidasService partidasService
 @inject NavigationManager navigationManager
+@rendermode InteractiveServer
 
 <PageTitle>Index de Partidas</PageTitle>
 
@@ -12,64 +13,77 @@
         </div>
 
         <div class="card-body">
-            <div class="mb-3 text-end">
+            
+
+            <div class="col-md-5">
+                <label class="form-label fw-bold">Filtrar por:</label>
+                <div class="input-group">
+                    <select class="form-select" @bind="FiltroSeleccionado">
+                        <option value="ID Partida">ID Partida</option>
+                        <option value="Jugador">Jugador</option>
+                        <option value="Estado">Estado</option>
+                    </select>
+
+                    <input class="form-control" @bind="ValorFiltro" placeholder="Escribe aquí..." />
+                    <button type="button" class="btn btn-primary" @onclick="Buscar">
+                        <i class="bi bi-search"></i> Buscar
+                    </button>
+                </div>
+            </div>
+            <div class=" text-end">
                 <a href="/Partidas/Create" class="btn btn-success mb-3">
-                    <i class="bi bi-plus-square mb-3"></i> Crear 
+                    <i class="bi bi-plus-square mb-3"></i> Crear
                 </a>
             </div>
 
             <table class="table table-bordered text-center align-middle">
                 <thead class="table-light">
-                <tr>
-                    <th>PartidasId</th>
-                    <th>Jugador 1</th>
-                    <th>Jugador 2</th>
-                    <th>Ganador</th>
-                    <th>Estado Partida</th>
-                    <th>Turno</th>
-                    <th>Tablero</th>
-                    <th>Opciones</th>
-
-                </tr>
+                    <tr>
+                        <th>Partida Id</th>
+                        <th>Jugador 1</th>
+                        <th>Jugador 2</th>
+                        <th>Ganador</th>
+                        <th>Estado Partida</th>
+                        <th>Turno</th>
+                        <th>Tablero</th>
+                        <th>Opciones</th>
+                    </tr>
                 </thead>
                 <tbody>
-                @if (ListaPartidas.Count == 0)
-                {
-                    <tr>
-                        <td colspan="6" class="text-muted"> No se encontraron partidas.</td>
-                    </tr>
-                }
-                else
-                {
-                    @foreach (var Partida in ListaPartidas)
+                    @if (ListaPartidasFiltradas.Count == 0)
                     {
                         <tr>
-                            <td>@Partida.PartidaId</td>
-                            <td>@Partida.Jugador1?.Nombres</td>
-                            <td>@Partida.Jugador2?.Nombres</td>
-                            <td>@Partida.Ganador?.Nombres</td>
-                            <td>@Partida.EstadoPartida</td>
-                            <td>@Partida.TurnoJugador?.Nombres</td>
-                            <td>@Partida.EstadoTablero</td>
-                            <td>
-                                <a href="/Partidas/Edit/@Partida.PartidaId" class="btn btn-outline-success btn-sm">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <button class="btn btn-outline-danger btn-sm" @onclick="() => MostrarModal(Partida)">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
+                            <td colspan="6" class="text-muted"> No se encontraron partidas.</td>
                         </tr>
                     }
-
-                }
-
+                    else
+                    {
+                        @foreach (var Partida in ListaPartidasFiltradas)
+                        {
+                            <tr>
+                                <td>@Partida.PartidaId</td>
+                                <td>@Partida.Jugador1?.Nombres</td>
+                                <td>@Partida.Jugador2?.Nombres</td>
+                                <td>@Partida.Ganador?.Nombres</td>
+                                <td>@Partida.EstadoPartida</td>
+                                <td>@Partida.TurnoJugador?.Nombres</td>
+                                <td>@Partida.EstadoTablero</td>
+                                <td>
+                                    <a href="/Partidas/Edit/@Partida.PartidaId" class="btn btn-outline-success btn-sm">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <button class="btn btn-outline-danger btn-sm" @onclick="() => MostrarModal(Partida)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
                 </tbody>
-
             </table>
         </div>
-        <div class="card-footer text-center">
-            <strong>Total de Partidas:</strong> @TotalPartidas 
+        <div class="card-footer ">
+            <strong>Total de Partidas:</strong> @TotalPartidas
             <strong>Total de Partidas Ganadas:</strong> @TotalGanadas
             <strong>Total de Partidas Jugadas:</strong> @TotalPartidas
         </div>
@@ -94,23 +108,39 @@
             </div>
         </div>
         <div class="card-footer d-flex gap-2">
-            <button class="btn btn-secondary" @onclick="() => EsVisibleModalEliminar= false">Cancelar</button>
+            <button class="btn btn-secondary" @onclick="() => EsVisibleModalEliminar = false">Cancelar</button>
             <button class="btn btn-danger" @onclick="EliminarPartida">Eliminar</button>
         </div>
     </div>
 }
+
 @code {
     public List<Partidas> ListaPartidas { get; set; } = new();
+    private string FiltroSeleccionado { get; set; } = "Jugador";
+    private string ValorFiltro { get; set; } = string.Empty;
+
+    private List<Partidas> ListaPartidasFiltradas =>
+        string.IsNullOrWhiteSpace(ValorFiltro)
+        ? ListaPartidas
+        : ListaPartidas.Where(p =>
+            (FiltroSeleccionado == "ID Partida" && p.PartidaId.ToString().Contains(ValorFiltro, StringComparison.OrdinalIgnoreCase)) ||
+            (FiltroSeleccionado == "Jugador" &&
+             ((p.Jugador1 != null && p.Jugador1.Nombres.Contains(ValorFiltro, StringComparison.OrdinalIgnoreCase)) ||
+              (p.Jugador2 != null && p.Jugador2.Nombres.Contains(ValorFiltro, StringComparison.OrdinalIgnoreCase)))) ||
+            (FiltroSeleccionado == "Estado" &&
+             p.EstadoPartida.Contains(ValorFiltro, StringComparison.OrdinalIgnoreCase))
+        ).ToList();
+
     public bool EsVisibleModalEliminar;
     public Partidas? PartidaSeleccionada { get; set; }
     public int TotalPartidas { get; set; }
     public int TotalGanadas { get; set; }
 
-
     protected override async Task OnInitializedAsync()
     {
         await CargarPartidas();
     }
+
     private async Task CargarPartidas()
     {
         ListaPartidas = await partidasService.Listar(p => true);
@@ -123,12 +153,12 @@
         PartidaSeleccionada = partida;
         EsVisibleModalEliminar = true;
     }
-    private void ConfirmarEliminar(Partidas partida)
+
+    private async Task Buscar()
     {
-        PartidaSeleccionada = partida;
-        EsVisibleModalEliminar = true;
+        ListaPartidas = await partidasService.Listar(p => true);
     }
-    
+
     private async Task EliminarPartida()
     {
         if (PartidaSeleccionada != null)
