@@ -46,6 +46,8 @@
                         <th>Estado Partida</th>
                         <th>Turno</th>
                         <th>Tablero</th>
+                        <th>Hora Inicio</th>
+                        <th>Hora Fin</th>
                         <th>Opciones</th>
                     </tr>
                 </thead>
@@ -68,6 +70,8 @@
                                 <td>@Partida.EstadoPartida</td>
                                 <td>@Partida.TurnoJugador?.Nombres</td>
                                 <td>@Partida.EstadoTablero</td>
+                                <td>@Partida.FechaInicio.ToString("g")</td>
+                                <td>@Partida.FechaFin?.ToString("g")</td>
                                 <td>
                                     <a href="/Partidas/Edit/@Partida.PartidaId" class="btn btn-outline-success btn-sm">
                                         <i class="bi bi-pencil"></i>
