@@ -25,7 +25,7 @@ namespace RegistroDeJugadores.Migrations
                 defaultValue: 0);
 
             migrationBuilder.AddColumn<int>(
-                name: "Victorias",
+                name: "Partidas",
                 table: "Partidas",
                 type: "int",
                 nullable: false,
@@ -44,7 +44,7 @@ namespace RegistroDeJugadores.Migrations
                 table: "Partidas");
 
             migrationBuilder.DropColumn(
-                name: "Victorias",
+                name: "Partidas",
                 table: "Partidas");
         }
     }

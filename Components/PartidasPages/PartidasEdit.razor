@@ -1,4 +1,4 @@
-﻿@page "/Victorias/Edit/{PartidaId:int}"
+﻿@page "/Partidas/Edit/{PartidaId:int}"
 @using RegistroDeJugadores.Models
 @using RegistroDeJugadores.Services
 @inject PartidasService partidasService
@@ -168,7 +168,7 @@ else
         {
             if (await partidasService.Guardar(Partida))
             {
-                NavigationManager.NavigateTo("/Victorias/Index");
+                NavigationManager.NavigateTo("/Partidas/Index");
             }
             
         }
@@ -181,7 +181,7 @@ else
             if (await partidasService.Eliminar(Partida.PartidaId))
             {
                 EsVisibleModalEliminar = false;
-                NavigationManager.NavigateTo("/Victorias/Index");
+                NavigationManager.NavigateTo("/Partidas/Index");
             }
             else
             {

@@ -75,7 +75,7 @@ public class JugadoresService
         {
             if (string.IsNullOrWhiteSpace(jugador.Nombres))
                 throw new ArgumentException("El nombre no puede estar vacío.");
-            if (jugador.Victorias < 0)
+            if (jugador.Partidas < 0)
                 throw new ArgumentException("Las partidas no pueden ser negativas.");
 
             await using var contexto = await DbFactory.CreateDbContextAsync();

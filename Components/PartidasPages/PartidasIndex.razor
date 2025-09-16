@@ -1,15 +1,15 @@
-﻿@page "/Victorias/Index"
+﻿@page "/Partidas/Index"
 @inject JugadoresService JugadoresService
 @inject PartidasService partidasService
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
 
-<PageTitle>Index de Victorias</PageTitle>
+<PageTitle>Index de Partidas</PageTitle>
 
 <div class="container">
     <div class="card shadow-sm">
         <div class="card-header bg-white text-center">
-            <h5 class="card-title mb-0">Index de Victorias</h5>
+            <h5 class="card-title mb-0">Index de Partidas</h5>
         </div>
 
         <div class="card-body">
@@ -73,7 +73,7 @@
                                 <td>@Partida.FechaInicio.ToString("g")</td>
                                 <td>@Partida.FechaFin?.ToString("g")</td>
                                 <td>
-                                    <a href="/Victorias/Edit/@Partida.PartidaId" class="btn btn-outline-success btn-sm">
+                                    <a href="/Partidas/Edit/@Partida.PartidaId" class="btn btn-outline-success btn-sm">
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                     <button class="btn btn-outline-danger btn-sm" @onclick="() => MostrarModal(Partida)">
@@ -87,9 +87,9 @@
             </table>
         </div>
         <div class="card-footer ">
-            <strong>Total de Victorias:</strong> @TotalPartidas
-            <strong>Total de Victorias Ganadas:</strong> @TotalGanadas
-            <strong>Total de Victorias Jugadas:</strong> @TotalPartidas
+            <strong>Total de Partidas:</strong> @TotalPartidas
+            <strong>Total de Partidas Ganadas:</strong> @TotalGanadas
+            <strong>Total de Partidas Jugadas:</strong> @TotalPartidas
         </div>
     </div>
 </div>

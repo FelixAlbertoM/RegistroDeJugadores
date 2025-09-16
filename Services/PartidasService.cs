@@ -155,4 +155,38 @@ public class PartidasService
             return 0;
         }
     }
+
+    public async Task ActualizarEstadisticas(Partidas partida)
+    {
+        await using var contexto = await _dbFactory.CreateDbContextAsync();
+
+        var jugador1 = await contexto.Jugadores.FindAsync(partida.Jugador1Id);
+        var jugador2 = await contexto.Jugadores.FindAsync(partida.Jugador2Id);
+
+        if (jugador1 == null || jugador2 == null)
+            return;
+
+        jugador1.Jugadas++;
+        jugador2.Jugadas++;
+
+        if (partida.GanadorId == null)
+        {
+            jugador1.Empates++;
+            jugador2.Empates++;
+        }
+        else
+        {
+            foreach(var jugador in new[] { jugador1, jugador2 })
+            {
+                if (jugador.JugadorId == partida.GanadorId)
+                    jugador.Partidas++;
+                else
+                    jugador.Derrotas++;
+            }
+        }
+        await contexto.SaveChangesAsync();
+
+    }
+
+     
 }

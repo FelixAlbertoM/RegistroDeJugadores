@@ -34,7 +34,7 @@ namespace RegistroDeJugadores.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("Victorias")
+                    b.Property<int>("Partidas")
                         .HasColumnType("int");
 
                     b.HasKey("JugadorId");
@@ -87,7 +87,7 @@ namespace RegistroDeJugadores.Migrations
                     b.Property<int?>("TurnoJugadorId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Victorias")
+                    b.Property<int>("Partidas")
                         .HasColumnType("int");
 
                     b.HasKey("PartidaId");

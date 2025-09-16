@@ -1,4 +1,4 @@
-﻿@page "/Victorias/Create/"
+﻿@page "/Partidas/Create/"
 @inject PartidasService partidasService
 @inject JugadoresService jugadoresService
 @inject NavigationManager NavigationManager
@@ -114,7 +114,7 @@
         }
         if (await partidasService.Guardar(Partida))
         {
-            NavigationManager.NavigateTo("/Victorias/index"); 
+            NavigationManager.NavigateTo("/Partidas/index"); 
         }
         else
         {

@@ -35,5 +35,8 @@ public class Partidas
 
     [ForeignKey(nameof(TurnoJugadorId))]
     public virtual Jugadores TurnoJugador { get; set; }
+
+    [InverseProperty(nameof(Models.Movimientos.Partida))]
+    public virtual ICollection<Movimientos> Movimientos { get; set; } = new List<Movimientos>();
 }
 
