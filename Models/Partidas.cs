@@ -20,6 +20,7 @@ public class Partidas
     [StringLength(9)] public string EstadoTablero { get; set; } = "3x3";
 
     public DateTime FechaInicio { get; set; } = DateTime.UtcNow;
+    
     public DateTime? FechaFin { get; set; }
 
     // Propiedades de navegacion
