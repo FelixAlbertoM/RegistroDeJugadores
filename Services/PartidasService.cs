@@ -179,7 +179,7 @@ public class PartidasService
             foreach(var jugador in new[] { jugador1, jugador2 })
             {
                 if (jugador.JugadorId == partida.GanadorId)
-                    jugador.Partidas++;
+                    jugador.Victorias++;
                 else
                     jugador.Derrotas++;
             }

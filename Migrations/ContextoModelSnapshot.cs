@@ -34,7 +34,7 @@ namespace RegistroDeJugadores.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("Partidas")
+                    b.Property<int>("Victorias")
                         .HasColumnType("int");
 
                     b.HasKey("JugadorId");
@@ -45,7 +45,7 @@ namespace RegistroDeJugadores.Migrations
                     b.ToTable("Jugadores");
                 });
 
-            modelBuilder.Entity("RegistroDeJugadores.Models.Partidas", b =>
+            modelBuilder.Entity("RegistroDeJugadores.Models.Victorias", b =>
                 {
                     b.Property<int>("PartidaId")
                         .ValueGeneratedOnAdd()
@@ -87,7 +87,7 @@ namespace RegistroDeJugadores.Migrations
                     b.Property<int?>("TurnoJugadorId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Partidas")
+                    b.Property<int>("Victorias")
                         .HasColumnType("int");
 
                     b.HasKey("PartidaId");
@@ -100,10 +100,10 @@ namespace RegistroDeJugadores.Migrations
 
                     b.HasIndex("TurnoJugadorId");
 
-                    b.ToTable("Partidas");
+                    b.ToTable("Victorias");
                 });
 
-            modelBuilder.Entity("RegistroDeJugadores.Models.Partidas", b =>
+            modelBuilder.Entity("RegistroDeJugadores.Models.Victorias", b =>
                 {
                     b.HasOne("RegistroDeJugadores.Models.Jugadores", "Ganador")
                         .WithMany()

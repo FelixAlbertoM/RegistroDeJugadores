@@ -26,7 +26,7 @@ namespace RegistroDeJugadores.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Partidas",
+                name: "Victorias",
                 columns: table => new
                 {
                     PartidaId = table.Column<int>(type: "int", nullable: false)
@@ -77,22 +77,22 @@ namespace RegistroDeJugadores.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Partidas_GanadorId",
-                table: "Partidas",
+                table: "Victorias",
                 column: "GanadorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Partidas_Jugador1Id",
-                table: "Partidas",
+                table: "Victorias",
                 column: "Jugador1Id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Partidas_Jugador2Id",
-                table: "Partidas",
+                table: "Victorias",
                 column: "Jugador2Id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Partidas_TurnoJugadorId",
-                table: "Partidas",
+                table: "Victorias",
                 column: "TurnoJugadorId");
         }
 
@@ -100,7 +100,7 @@ namespace RegistroDeJugadores.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Partidas");
+                name: "Victorias");
 
             migrationBuilder.DropTable(
                 name: "Jugadores");

@@ -46,7 +46,7 @@
 					<tr>
 						<th>JugadorId</th>
 						<th>Nombre</th>
-						<th>Partidas</th>
+						<th>Victorias</th>
 						<th>Editar</th>
 						<th>Eliminar</th>
 					</tr>
@@ -65,7 +65,7 @@
 							<tr>
 								<td>@jugador.JugadorId</td>
 								<td>@jugador.Nombres</td>
-								<td>@jugador.Partidas.ToString("G")</td>
+								<td>@jugador.Victorias.ToString("G")</td>
 								<td>
 									<a href="/Jugador/Edit/@jugador.JugadorId" class="btn btn-outline-success btn-sm">
 										<i class="bi bi-pencil"></i>
@@ -97,7 +97,7 @@
 			<div class="border p-3 bg-light">
 				<p><strong>JugadorId:</strong> @JugadorSeleccionado?.JugadorId</p>
 				<p><strong>Nombre:</strong> @JugadorSeleccionado?.Nombres</p>
-				<p><strong>Partidas:</strong> @JugadorSeleccionado?.Partidas</p>
+				<p><strong>Victorias:</strong> @JugadorSeleccionado?.Victorias</p>
 			</div>
 		</div>
 		<div class="card-footer d-flex gap-2">

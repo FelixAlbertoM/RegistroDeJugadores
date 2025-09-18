@@ -12,21 +12,21 @@ namespace RegistroDeJugadores.Migrations
         {
             migrationBuilder.AddColumn<int>(
                 name: "Derrotas",
-                table: "Partidas",
+                table: "Victorias",
                 type: "int",
                 nullable: false,
                 defaultValue: 0);
 
             migrationBuilder.AddColumn<int>(
                 name: "Empates",
-                table: "Partidas",
+                table: "Victorias",
                 type: "int",
                 nullable: false,
                 defaultValue: 0);
 
             migrationBuilder.AddColumn<int>(
-                name: "Partidas",
-                table: "Partidas",
+                name: "Victorias",
+                table: "Victorias",
                 type: "int",
                 nullable: false,
                 defaultValue: 0);
@@ -37,15 +37,15 @@ namespace RegistroDeJugadores.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "Derrotas",
-                table: "Partidas");
+                table: "Victorias");
 
             migrationBuilder.DropColumn(
                 name: "Empates",
-                table: "Partidas");
+                table: "Victorias");
 
             migrationBuilder.DropColumn(
-                name: "Partidas",
-                table: "Partidas");
+                name: "Victorias",
+                table: "Victorias");
         }
     }
 }
