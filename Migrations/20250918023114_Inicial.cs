@@ -18,7 +18,10 @@ namespace RegistroDeJugadores.Migrations
                     JugadorId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nombres = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Partidas = table.Column<int>(type: "int", nullable: false)
+                    Victorias = table.Column<int>(type: "int", nullable: false),
+                    Empates = table.Column<int>(type: "int", nullable: false),
+                    Derrotas = table.Column<int>(type: "int", nullable: false),
+                    Jugadas = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -26,7 +29,7 @@ namespace RegistroDeJugadores.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Victorias",
+                name: "Partidas",
                 columns: table => new
                 {
                     PartidaId = table.Column<int>(type: "int", nullable: false)
@@ -69,6 +72,35 @@ namespace RegistroDeJugadores.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Movimientos",
+                columns: table => new
+                {
+                    MovimientoId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PartidaId = table.Column<int>(type: "int", nullable: false),
+                    JugadorId = table.Column<int>(type: "int", nullable: false),
+                    PosicionFila = table.Column<int>(type: "int", nullable: false),
+                    PosicionColumna = table.Column<int>(type: "int", nullable: false),
+                    FechaMovimiento = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Movimientos", x => x.MovimientoId);
+                    table.ForeignKey(
+                        name: "FK_Movimientos_Jugadores_JugadorId",
+                        column: x => x.JugadorId,
+                        principalTable: "Jugadores",
+                        principalColumn: "JugadorId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Movimientos_Partidas_PartidaId",
+                        column: x => x.PartidaId,
+                        principalTable: "Partidas",
+                        principalColumn: "PartidaId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Jugadores_Nombres",
                 table: "Jugadores",
@@ -76,23 +108,33 @@ namespace RegistroDeJugadores.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Movimientos_JugadorId",
+                table: "Movimientos",
+                column: "JugadorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Movimientos_PartidaId",
+                table: "Movimientos",
+                column: "PartidaId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Partidas_GanadorId",
-                table: "Victorias",
+                table: "Partidas",
                 column: "GanadorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Partidas_Jugador1Id",
-                table: "Victorias",
+                table: "Partidas",
                 column: "Jugador1Id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Partidas_Jugador2Id",
-                table: "Victorias",
+                table: "Partidas",
                 column: "Jugador2Id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Partidas_TurnoJugadorId",
-                table: "Victorias",
+                table: "Partidas",
                 column: "TurnoJugadorId");
         }
 
@@ -100,7 +142,10 @@ namespace RegistroDeJugadores.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Victorias");
+                name: "Movimientos");
+
+            migrationBuilder.DropTable(
+                name: "Partidas");
 
             migrationBuilder.DropTable(
                 name: "Jugadores");
