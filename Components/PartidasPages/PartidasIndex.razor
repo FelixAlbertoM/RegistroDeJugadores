@@ -1,15 +1,15 @@
-﻿@page "/Victorias/Index"
+﻿@page "/Partidas/Index"
 @inject JugadoresService JugadoresService
 @inject PartidasService partidasService
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
 
-<PageTitle>Index de Victorias</PageTitle>
+<PageTitle>Index de Partidas</PageTitle>
 
 <div class="container">
     <div class="card shadow-sm">
         <div class="card-header bg-white text-center">
-            <h5 class="card-title mb-0">Index de Victorias</h5>
+            <h5 class="card-title mb-0">Index de Partidas</h5>
         </div>
 
         <div class="card-body">
@@ -31,9 +31,7 @@
                 </div>
             </div>
             <div class=" text-end">
-                <a href="/Partidas/Create" class="btn btn-success mb-3">
-                    <i class="bi bi-plus-square mb-3"></i> Crear
-                </a>
+                <td colspan="10" class="text-muted"> No se encontraron partidas.</td>
             </div>
 
             <table class="table table-bordered text-center align-middle">
@@ -73,7 +71,7 @@
                                 <td>@Partida.FechaInicio.ToString("g")</td>
                                 <td>@Partida.FechaFin?.ToString("g")</td>
                                 <td>
-                                    <a href="/Victorias/Edit/@Partida.PartidaId" class="btn btn-outline-success btn-sm">
+                                    <a href="/Partidas/Edit/@Partida.PartidaId" class="btn btn-outline-success btn-sm">
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                     <button class="btn btn-outline-danger btn-sm" @onclick="() => MostrarModal(Partida)">
@@ -86,10 +84,12 @@
                 </tbody>
             </table>
         </div>
-        <div class="card-footer ">
-            <strong>Total de Victorias:</strong> @TotalPartidas
-            <strong>Total de Victorias Ganadas:</strong> @TotalGanadas
-            <strong>Total de Victorias Jugadas:</strong> @TotalPartidas
+        <div class="card-footer text-center">
+            <strong>Total Jugadas:</strong> @TotalPartidas
+            &nbsp;&nbsp;
+            <strong>Total Ganadas:</strong> @TotalGanadas
+            &nbsp;&nbsp;
+            <strong>Total Empatadas:</strong> @TotalEmpatadas
         </div>
     </div>
 </div>
@@ -136,6 +136,7 @@
         ).ToList();
 
     public bool EsVisibleModalEliminar;
+    public int TotalEmpatadas { get; set; }
     public Partidas? PartidaSeleccionada { get; set; }
     public int TotalPartidas { get; set; }
     public int TotalGanadas { get; set; }
@@ -144,13 +145,6 @@
     {
         await CargarPartidas();
     }
-     
-    private async Task CargarPartidas()
-    {
-        ListaPartidas = await partidasService.Listar(p => true);
-        TotalPartidas = await partidasService.TotalPartidasJugadas();
-        TotalGanadas = await partidasService.TotalPartidasGanadas();
-    }
 
     private void MostrarModal(Partidas partida)
     {
@@ -158,11 +152,19 @@
         EsVisibleModalEliminar = true;
     }
 
-    private async Task Buscar()
+    private async Task CargarPartidas()
     {
         ListaPartidas = await partidasService.Listar(p => true);
+        TotalPartidas = await partidasService.TotalPartidasJugadas();
+        TotalGanadas = await partidasService.TotalPartidasGanadas();
+        TotalEmpatadas = await partidasService.TotalPartidasEmpatadas();
     }
 
+    private async Task Buscar()
+    {
+        ListaPartidas = await partidasService.Listar(p => true) ?? new List<Partidas>();
+        ListaPartidas = ListaPartidasFiltradas; 
+    }
     private async Task EliminarPartida()
     {
         if (PartidaSeleccionada != null)

@@ -1,10 +1,10 @@
-﻿@page "/Victorias/Create/"
+﻿@page "/Partidas/Create/"
 @inject PartidasService partidasService
 @inject JugadoresService jugadoresService
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
-<PageTitle> Crear Partida></PageTitle>
+<PageTitle>Crear Partida</PageTitle>
 
 <div class="container mt-4">
     <div class="card shadow-sm">
@@ -53,7 +53,7 @@
                 
                 <div class="mb-3">
                     <label class="form-label fw-bold" >Hora de inicio</label>
-                    <InputDate class="form-control" @bind-Value="Partida.FechaInicio"  readonly/>
+                    <input type="datetime-local" class="form-control" @bind="Partida.FechaInicio" />
                 </div>
 
 

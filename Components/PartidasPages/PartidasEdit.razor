@@ -1,4 +1,4 @@
-﻿@page "/Victorias/Edit/{PartidaId:int}"
+﻿@page "/Partidas/Edit/{PartidaId:int}"
 @using RegistroDeJugadores.Models
 @using RegistroDeJugadores.Services
 @inject PartidasService partidasService
@@ -52,7 +52,7 @@
                     
                     <div class="mb-3">
                         <label class="form-label fw-bold">Turno Inicial</label>
-                        <InputSelect class="form-select" @bind-Value="Partida.TurnoJugadorId" disabled="@(AmbosJugadoresSeleccionados)">
+                        <InputSelect class="form-select" @bind-Value="Partida.TurnoJugadorId" disabled="!AmbosJugadoresSeleccionados">
                             <option value="0" disabled>Seleccione jugador inicial</option>
                             @if (Partida.Jugador1Id > 0)
                             {
@@ -68,7 +68,7 @@
                     <div class="mb-3">
                         <label class="form-label fw-bold">Ganador</label>
                         <InputSelect class="form-select" @bind-Value="Partida.GanadorId">
-                            <option value="">-- Seleccione Ganador --</option>
+                            <option value="0">-- Seleccione Ganador --</option>
                             @foreach (var jugador in ListaJugadores)
                             {
                                 <option value="@jugador.JugadorId">@jugador.Nombres</option>
@@ -83,7 +83,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold"> Hora de Fin</label>
-                            <InputDate class="form-control" @bind-Value="Partida.FechaFin" />
+                            <input type="datetime-local" class="form-control" @bind="Partida.FechaFin" />
                         </div>
 
                     </div>
@@ -102,7 +102,7 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-save"></i> Guardar Cambios
                         </button>
-                        <a href="/Partidas/Index" class="btn btn-secondary">
+                        <a href="/Partidas/Edit/@Partida.PartidaId" class="btn btn-outline-success btn-sm">
                             <i class="bi bi-arrow-left-circle"></i> Cancelar
                         </a>
                         <button type="button" class="btn btn-danger" @onclick="() => EsVisibleModalEliminar = true">
@@ -168,7 +168,7 @@ else
         {
             if (await partidasService.Guardar(Partida))
             {
-                NavigationManager.NavigateTo("/Victorias/Index");
+                NavigationManager.NavigateTo("/Partidas/Index");
             }
             
         }
@@ -181,7 +181,7 @@ else
             if (await partidasService.Eliminar(Partida.PartidaId))
             {
                 EsVisibleModalEliminar = false;
-                NavigationManager.NavigateTo("/Victorias/Index");
+                NavigationManager.NavigateTo("/Partidas/Index");
             }
             else
             {
