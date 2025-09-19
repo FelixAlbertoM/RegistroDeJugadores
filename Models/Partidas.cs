@@ -7,7 +7,9 @@ public class Partidas
 {
     [Key] public int PartidaId { get; set; }
 
-    public int Jugador1Id { get; set; }
+    [Required(ErrorMessage = "El primer jugador es obligatorio")]
+    [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar un Jugador 1")]
+	public int Jugador1Id { get; set; }
     public int? Jugador2Id { get; set; }
 
     [Required]
@@ -17,9 +19,10 @@ public class Partidas
     public int? GanadorId { get; set; }
     public int? TurnoJugadorId { get; set; }
 
-    [StringLength(9)] public string EstadoTablero { get; set; } = "3x3";
+    [StringLength(9)] public string EstadoTablero { get; set; } = "_________";
 
     public DateTime FechaInicio { get; set; } = DateTime.UtcNow;
+    
     public DateTime? FechaFin { get; set; }
 
     // Propiedades de navegacion
@@ -34,5 +37,8 @@ public class Partidas
 
     [ForeignKey(nameof(TurnoJugadorId))]
     public virtual Jugadores TurnoJugador { get; set; }
+
+	[InverseProperty(nameof(Movimientos.Partida))]
+    public virtual ICollection<Movimientos> Movimiento { get; set; } = new List<Movimientos>();
 }
 
