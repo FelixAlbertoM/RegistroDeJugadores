@@ -22,5 +22,6 @@ namespace RegistroDeJugadores.Models;
         [ForeignKey(nameof(JugadorId))]
         public virtual Jugadores Jugador { get; set; }
 
-        }
+        
+}
 

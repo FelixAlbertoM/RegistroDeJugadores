@@ -14,11 +14,13 @@ namespace RegistroDeJugadores.Models;
         [Required(ErrorMessage = "El nombre es obligatorio")]
         public string Nombres { get; set; }
 
-        [Range(0, int.MaxValue, ErrorMessage = "Las partidas no pueden ser negativas")]
+        [Range(0, int.MaxValue, ErrorMessage = "Las Victorias no pueden ser negativas")]
         public int Victorias { get; set; } = 0;
         public int Empates { get; set; } = 0;
         public int Derrotas { get; set; } = 0;
         public int Jugadas { get; set; } = 0;
 
+        [InverseProperty(nameof(Models.Movimientos.Jugador))]
+        public virtual ICollection<Movimientos> Movimientos { get; set; } = new List<Movimientos>();
 }
 
