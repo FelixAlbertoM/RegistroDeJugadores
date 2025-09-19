@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using RegistroDeJugadores.DAL;
 using RegistroDeJugadores.Models;
 
+
 namespace RegistroDeJugadores.Services;
 
 public class PartidasService
@@ -61,15 +62,19 @@ public class PartidasService
         }
     }
 
-    public async Task<bool> Guardar(Partidas partida)
+	public async Task<bool> Guardar(Partidas partida)
     {
         try
         {
             bool existe = await Existe(partida.PartidaId);
-            _logger.LogInformation("Partida {PartidaId} existe: {Existe}", partida.PartidaId, existe);
-            return !existe
+            var resultado = !existe
                 ? await Insertar(partida)
                 : await Modificar(partida);
+
+            if (resultado)
+                await ActualizarEstadisticasAsync(partida);
+
+            return resultado;
         }
         catch (Exception ex)
         {
@@ -78,7 +83,7 @@ public class PartidasService
         }
     }
 
-    public async Task<Partidas> Buscar(int partidaId)
+	public async Task<Partidas> Buscar(int partidaId)
     {
         try
         {
@@ -155,38 +160,58 @@ public class PartidasService
             return 0;
         }
     }
-
-    public async Task ActualizarEstadisticas(Partidas partida)
+    public async Task<int> TotalPartidasEmpatadas()
     {
-        await using var contexto = await _dbFactory.CreateDbContextAsync();
-
-        var jugador1 = await contexto.Jugadores.FindAsync(partida.Jugador1Id);
-        var jugador2 = await contexto.Jugadores.FindAsync(partida.Jugador2Id);
-
-        if (jugador1 == null || jugador2 == null)
-            return;
-
-        jugador1.Jugadas++;
-        jugador2.Jugadas++;
-
-        if (partida.GanadorId == null)
+        try
         {
-            jugador1.Empates++;
-            jugador2.Empates++;
+            await using var contexto = await _dbFactory.CreateDbContextAsync();
+            return await contexto.Partidas.CountAsync(p => p.GanadorId == null && p.EstadoPartida == "Empate");
         }
-        else
+        catch (Exception ex)
         {
-            foreach(var jugador in new[] { jugador1, jugador2 })
-            {
-                if (jugador.JugadorId == partida.GanadorId)
-                    jugador.Victorias++;
-                else
-                    jugador.Derrotas++;
-            }
+            _logger.LogError(ex, "Error calculando total de partidas empatadas");
+            return 0;
         }
-        await contexto.SaveChangesAsync();
-
     }
 
-     
+
+    public async Task ActualizarEstadisticasAsync(Partidas partida)
+    {
+        try
+        {
+            await using var contexto = await _dbFactory.CreateDbContextAsync();
+            var jugadorX = await contexto.Jugadores.FirstOrDefaultAsync(j => j.JugadorId == partida.Jugador1Id); 
+            var jugadorO = await contexto.Jugadores.FirstOrDefaultAsync(j => j.JugadorId == partida.Jugador2Id); 
+
+            if (jugadorX != null) jugadorX.Jugadas++;
+            if (jugadorO != null) jugadorO.Jugadas++;
+
+            if (partida.GanadorId != null)
+            {
+                if (partida.GanadorId == jugadorX?.JugadorId)
+                {
+                    jugadorX.Victorias++;
+                    jugadorO.Derrotas++;
+                }
+                else if (partida.GanadorId == jugadorO?.JugadorId)
+                {
+                    jugadorO.Victorias++;
+                    jugadorX.Derrotas++;
+                }
+            }
+            else
+            {
+                if (jugadorX != null) jugadorX.Empates++;
+                if (jugadorO != null) jugadorO.Empates++;
+            }
+
+            await contexto.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error actualizando estadísticas para partida {PartidaId}", partida.PartidaId);
+        }
+    }
+
+
 }
