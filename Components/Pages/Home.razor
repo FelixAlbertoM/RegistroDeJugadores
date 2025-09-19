@@ -78,7 +78,26 @@
     protected override async Task OnInitializedAsync()
     {
         jugadoresDisponibles = await JugadoresService.Listar(j => true) ?? new List<Jugadores>();
+
+        // Verificar si hay partida en curso
+        var partidas = await PartidasService.Listar(p => p.EstadoPartida == "En Curso");
+        partida = partidas.FirstOrDefault();
+
+        if (partida != null)
+        {
+            jugadorXId = partida.Jugador1Id;
+            jugadorOId = partida.Jugador2Id ??=0;
+            tablero = partida.EstadoTablero
+                .Select(c => c == '_' ? null : c.ToString())
+                .ToArray();
+
+            // Restaurar turno
+            jugadorActual = partida.TurnoJugadorId == jugadorXId ? "X" : "O";
+
+            gameStarted = true;
+        }
     }
+
 
     private async Task StartGame()
     {
@@ -182,17 +201,26 @@
     }
 
 
-    private void RestartGame()
+    private async void RestartGame()
     {
+        if (partida != null)
+        {
+            partida.EstadoPartida = "Finalizada";
+            partida.FechaFin = DateTime.Now;
+            await PartidasService.Guardar(partida);
+        }
+
         gameStarted = false;
         jugadorXId = 0;
         jugadorOId = 0;
-        tablero = new string?[9];
+        tablero = new string[9];
         jugadorActual = "X";
         winner = null;
         esEmpate = false;
         partida = null;
+        StateHasChanged();
     }
+
 
     private string GetPlayerClass(string? val) =>
         val == "X" ? "player-x" : val == "O" ? "player-o" : "";
