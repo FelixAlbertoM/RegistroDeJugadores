@@ -5,6 +5,10 @@ VisualStudioVersion = 17.14.36414.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegistroDeJugadores", "RegistroDeJugadores.csproj", "{16637EFB-9ADD-4FD0-BA58-8DBFCE2BB517}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegistroDeJugadores.Shared", "..\RegistroDeJugadores.Shared\RegistroDeJugadores.Shared.csproj", "{5672AD5F-B7F5-4931-A250-D2606174FCA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegistroDeJugadores.BlazorWasm", "..\RegistroDeJugadores.BlazorWasm\RegistroDeJugadores.BlazorWasm.csproj", "{918A59E3-85CD-4AD4-9C7A-DBCE12E7B3E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{16637EFB-9ADD-4FD0-BA58-8DBFCE2BB517}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16637EFB-9ADD-4FD0-BA58-8DBFCE2BB517}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16637EFB-9ADD-4FD0-BA58-8DBFCE2BB517}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5672AD5F-B7F5-4931-A250-D2606174FCA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5672AD5F-B7F5-4931-A250-D2606174FCA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5672AD5F-B7F5-4931-A250-D2606174FCA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5672AD5F-B7F5-4931-A250-D2606174FCA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{918A59E3-85CD-4AD4-9C7A-DBCE12E7B3E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{918A59E3-85CD-4AD4-9C7A-DBCE12E7B3E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{918A59E3-85CD-4AD4-9C7A-DBCE12E7B3E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{918A59E3-85CD-4AD4-9C7A-DBCE12E7B3E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
